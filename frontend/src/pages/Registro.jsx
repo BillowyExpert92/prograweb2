@@ -46,7 +46,7 @@ function Registro() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/usuarios/registro",
+        "https://prograweb2-zaiw.onrender.com/api/usuarios/registro",
         {
           method: "POST",
           body: formData
