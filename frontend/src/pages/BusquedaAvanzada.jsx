@@ -28,8 +28,8 @@ function BusquedaAvanzada() {
   const getImageUrl = (ruta, fallback = "/User.jpg") => {
     if (!ruta) return fallback;
     if (ruta.startsWith("http")) return ruta;
-    if (ruta.startsWith("/uploads")) return `http://localhost:5000${ruta}`;
-    if (ruta.startsWith("uploads")) return `http://localhost:5000/${ruta}`;
+    if (ruta.startsWith("/uploads")) return `https://prograweb2-zaiw.onrender.com${ruta}`;
+    if (ruta.startsWith("uploads")) return `https://prograweb2-zaiw.onrender.com/${ruta}`;
     return `/${ruta}`;
   };
 
@@ -43,7 +43,7 @@ function BusquedaAvanzada() {
 
   const cargarPublicaciones = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/publicaciones");
+      const res = await fetch("https://prograweb2-zaiw.onrender.com/api/publicaciones");
       const data = await res.json();
       setPublicaciones(data);
     } catch (error) {
