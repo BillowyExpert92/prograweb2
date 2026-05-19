@@ -25,8 +25,8 @@ function Perfil() {
   const getImageUrl = (ruta, fallback = "/User.jpg") => {
     if (!ruta) return fallback;
     if (ruta.startsWith("http")) return ruta;
-    if (ruta.startsWith("/uploads")) return `http://localhost:5000${ruta}`;
-    if (ruta.startsWith("uploads")) return `http://localhost:5000/${ruta}`;
+    if (ruta.startsWith("/uploads")) return `https://prograweb2-zaiw.onrender.com${ruta}`;
+    if (ruta.startsWith("uploads")) return `https://prograweb2-zaiw.onrender.com/${ruta}`;
     return `/${ruta}`;
   };
 
@@ -41,7 +41,7 @@ function Perfil() {
   }, []);
 
   const cargarDatos = async () => {
-    const res = await fetch(`http://localhost:5000/api/usuarios/${usuarioLocal._id}`);
+    const res = await fetch(`https://prograweb2-zaiw.onrender.com/api/usuarios/${usuarioLocal._id}`);
     const data = await res.json();
 
     setUsuario(data);
@@ -51,7 +51,7 @@ function Perfil() {
   };
 
   const cargarPublicaciones = async () => {
-    const res = await fetch(`http://localhost:5000/api/publicaciones?user=${usuarioLocal._id}`);
+    const res = await fetch(`https://prograweb2-zaiw.onrender.com/api/publicaciones?user=${usuarioLocal._id}`);
     const data = await res.json();
     setPublicaciones(data);
   };
@@ -73,7 +73,7 @@ function Perfil() {
       formData.append("imagen_perfil", imagen);
     }
 
-    const res = await fetch(`http://localhost:5000/api/usuarios/${usuarioLocal._id}`, {
+    const res = await fetch(`https://prograweb2-zaiw.onrender.com/api/usuarios/${usuarioLocal._id}`, {
       method: "PUT",
       body: formData
     });
@@ -99,7 +99,7 @@ function Perfil() {
   };
 
   const guardarPublicacion = async (id) => {
-    const res = await fetch(`http://localhost:5000/api/publicaciones/${id}`, {
+    const res = await fetch(`https://prograweb2-zaiw.onrender.com/api/publicaciones/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -124,7 +124,7 @@ function Perfil() {
 
     if (!confirmar) return;
 
-    const res = await fetch(`http://localhost:5000/api/publicaciones/${id}`, {
+    const res = await fetch(`https://prograweb2-zaiw.onrender.com/api/publicaciones/${id}`, {
       method: "DELETE"
     });
 
