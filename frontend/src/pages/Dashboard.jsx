@@ -33,7 +33,7 @@ function Dashboard() {
   const cargarPublicaciones = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/publicaciones?orden=${orden}`
+        `https://prograweb2-zaiw.onrender.com/api/publicaciones?orden=${orden}`
       );
 
       const data = await res.json();
@@ -77,7 +77,7 @@ function Dashboard() {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/publicaciones/${idPublicacion}/valorar`,
+      `https://prograweb2-zaiw.onrender.com/${idPublicacion}/valorar`,
       {
         method: "POST",
         headers: {
