@@ -32,7 +32,7 @@ function CrearPublicacion() {
 
   const cargarPeliculas = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/peliculas");
+      const res = await fetch("https://prograweb2-zaiw.onrender.com/api/peliculas");
       const data = await res.json();
       setPeliculas(data);
     } catch (error) {
@@ -77,7 +77,7 @@ function CrearPublicacion() {
     formData.append("usuario", usuario._id);
     formData.append("categoria", nuevaCategoria);
 
-    const res = await fetch("http://localhost:5000/api/peliculas", {
+    const res = await fetch("https://prograweb2-zaiw.onrender.com/api/peliculas", {
       method: "POST",
       body: formData
     });
@@ -129,7 +129,7 @@ function CrearPublicacion() {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/publicaciones", {
+      const response = await fetch("https://prograweb2-zaiw.onrender.com/api/publicaciones", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
