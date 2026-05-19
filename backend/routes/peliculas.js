@@ -1,35 +1,23 @@
 const express = require("express");
 const router = express.Router();
+
 const multer = require("multer");
 const { storagePosters } = require("../config/cloudinary");
-const upload = multer({ storage: storagePosters });
-
-const path = require("path");
 
 const Pelicula = require("../models/pelicula");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/posters");
-  },
-
-  filename: (req, file, cb) => {
-    const nombre =
-      Date.now() + path.extname(file.originalname);
-
-    cb(null, nombre);
-  }
-});
-
-const upload = multer({ storagePosters });
+const upload = multer({ storage: storagePosters });
 
 router.get("/", async (req, res) => {
   try {
     const peliculas = await Pelicula.find().sort({ titulo: 1 });
+
     res.json(peliculas);
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      error: error.message
+    });
   }
 });
 
@@ -43,7 +31,10 @@ router.post(
         titulo: req.body.titulo,
         categoria: req.body.categoria,
         usuario: req.body.usuario,
-        poster: req.file ? req.file.path : ""
+
+        poster: req.file
+          ? req.file.path
+          : ""
       });
 
       await nuevaPelicula.save();

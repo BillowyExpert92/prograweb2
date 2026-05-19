@@ -1,136 +1,120 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
-
 const multer = require("multer");
-const { storageUsuarios } = require("../config/cloudinary");
-const upload = multer({ storage: storageUsuarios });
 
-const fs = require("fs");
+const { storageUsuarios } = require("../config/cloudinary");
 const Usuario = require("../models/usuario");
 
-if (!fs.existsSync("uploads")) {
-    fs.mkdirSync("uploads");
-}
-
-if (!fs.existsSync("uploads/usuarios")) {
-    fs.mkdirSync("uploads/usuarios");
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads/usuarios");
-    },
-
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + "-" + file.originalname);
-    }
-});
-
-const upload = multer({ storageUsuarios });
+const upload = multer({ storage: storageUsuarios });
 
 router.post("/registro", upload.single("imagen_perfil"), async (req, res) => {
-    try {
-        const {
-            nombre,
-            apellidos,
-            fecha_nacimiento,
-            correo_electronico,
-            nombre_usuario,
-            contrasena
-        } = req.body;
+  try {
+    const {
+      nombre,
+      apellidos,
+      fecha_nacimiento,
+      correo_electronico,
+      nombre_usuario,
+      contrasena
+    } = req.body;
 
-        if (
-            !nombre ||
-            !apellidos ||
-            !fecha_nacimiento ||
-            !correo_electronico ||
-            !nombre_usuario ||
-            !contrasena
-        ) {
-            return res.json({
-                success: false,
-                message: "Faltan datos obligatorios."
-            });
-        }
-
-        const usuarioExistente = await Usuario.findOne({
-            $or: [
-                { correo_electronico },
-                { nombre_usuario }
-            ]
-        });
-
-        if (usuarioExistente) {
-            return res.json({
-                success: false,
-                message: "El usuario o correo ya existe."
-            });
-        }
-
-        const passwordHash = await bcrypt.hash(contrasena, 10);
-
-        const nuevoUsuario = new Usuario({
-            nombre,
-            apellidos,
-            fecha_nacimiento,
-            correo_electronico,
-            nombre_usuario,
-            contrasena: passwordHash,
-            imagen_perfil: req.file ? req.file.path : ""
-        });
-
-        await nuevoUsuario.save();
-
-        res.json({
-            success: true,
-            message: "Usuario registrado correctamente."
-        }) ;
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+    if (
+      !nombre ||
+      !apellidos ||
+      !fecha_nacimiento ||
+      !correo_electronico ||
+      !nombre_usuario ||
+      !contrasena
+    ) {
+      return res.json({
+        success: false,
+        message: "Faltan datos obligatorios."
+      });
     }
+
+    const usuarioExistente = await Usuario.findOne({
+      $or: [{ correo_electronico }, { nombre_usuario }]
+    });
+
+    if (usuarioExistente) {
+      return res.json({
+        success: false,
+        message: "El usuario o correo ya existe."
+      });
+    }
+
+    const passwordHash = await bcrypt.hash(contrasena, 10);
+
+    const nuevoUsuario = new Usuario({
+      nombre,
+      apellidos,
+      fecha_nacimiento,
+      correo_electronico,
+      nombre_usuario,
+      contrasena: passwordHash,
+      imagen_perfil: req.file ? req.file.path : ""
+    });
+
+    await nuevoUsuario.save();
+
+    res.json({
+      success: true,
+      message: "Usuario registrado correctamente."
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
 });
 
 router.post("/login", async (req, res) => {
-    try {
-        const { nombre_usuario, contrasena } = req.body;
+  try {
+    const { nombre_usuario, contrasena } = req.body;
 
-        const usuario = await Usuario.findOne({ nombre_usuario });
+    const usuario = await Usuario.findOne({ nombre_usuario });
 
-        if (!usuario) {
-            return res.json({
-                success: false,
-                message: "Usuario no encontrado."
-            });
-        }
-
-        const passwordCorrecta = await bcrypt.compare(
-            contrasena,
-            usuario.contrasena
-        );
-
-        if (!passwordCorrecta) {
-            return res.json({
-                success: false,
-                message: "Contraseña incorrecta."
-            });
-        }
-
-        res.json({
-            success: true,
-            usuario
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
+    if (!usuario) {
+      return res.json({
+        success: false,
+        message: "Usuario no encontrado."
+      });
     }
+
+    const passwordCorrecta = await bcrypt.compare(
+      contrasena,
+      usuario.contrasena
+    );
+
+    if (!passwordCorrecta) {
+      return res.json({
+        success: false,
+        message: "Contraseña incorrecta."
+      });
+    }
+
+    res.json({
+      success: true,
+      usuario: {
+        _id: usuario._id,
+        nombre: usuario.nombre,
+        apellidos: usuario.apellidos,
+        fecha_nacimiento: usuario.fecha_nacimiento,
+        correo_electronico: usuario.correo_electronico,
+        nombre_usuario: usuario.nombre_usuario,
+        imagen_perfil: usuario.imagen_perfil
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
 });
 
 router.get("/:id", async (req, res) => {
@@ -147,7 +131,7 @@ router.put("/:id", upload.single("imagen_perfil"), async (req, res) => {
     const datos = {};
 
     if (req.body.nombre) {
-        datos.nombre = req.body.nombre;
+      datos.nombre = req.body.nombre;
     }
 
     if (req.body.apellidos) {
@@ -163,13 +147,13 @@ router.put("/:id", upload.single("imagen_perfil"), async (req, res) => {
     }
 
     if (req.file) {
-        datos.imagen_perfil = req.file.path;
+      datos.imagen_perfil = req.file.path;
     }
 
     const usuario = await Usuario.findByIdAndUpdate(
-        req.params.id,
-        datos,
-        { returnDocument: "after" }
+      req.params.id,
+      datos,
+      { returnDocument: "after" }
     ).select("-contrasena");
 
     res.json({
