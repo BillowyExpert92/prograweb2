@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+
 const multer = require("multer");
+const { storageUsuarios } = require("../config/cloudinary");
+const upload = multer({ storage: storageUsuarios });
+
 const fs = require("fs");
 const Usuario = require("../models/usuario");
 
@@ -73,9 +77,7 @@ router.post("/registro", upload.single("imagen_perfil"), async (req, res) => {
             correo_electronico,
             nombre_usuario,
             contrasena: passwordHash,
-            imagen_perfil: req.file
-                ? `/uploads/usuarios/${req.file.filename}`
-                : ""
+            imagen_perfil: req.file ? req.file.path : ""
         });
 
         await nuevoUsuario.save();
@@ -161,7 +163,7 @@ router.put("/:id", upload.single("imagen_perfil"), async (req, res) => {
     }
 
     if (req.file) {
-      datos.imagen_perfil = `/uploads/usuarios/${req.file.filename}`;
+        datos.imagen_perfil = req.file.path;
     }
 
     const usuario = await Usuario.findByIdAndUpdate(

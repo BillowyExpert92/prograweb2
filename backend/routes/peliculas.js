@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
+const { storagePosters } = require("../config/cloudinary");
+const upload = multer({ storage: storagePosters });
+
 const path = require("path");
 
 const Pelicula = require("../models/pelicula");
@@ -40,9 +43,7 @@ router.post(
         titulo: req.body.titulo,
         categoria: req.body.categoria,
         usuario: req.body.usuario,
-        poster: req.file
-          ? `/uploads/posters/${req.file.filename}`
-          : ""
+        poster: req.file ? req.file.path : ""
       });
 
       await nuevaPelicula.save();
