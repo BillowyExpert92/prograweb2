@@ -54,7 +54,7 @@ function CrearPublicacion() {
 
     if (ruta.startsWith("http")) return ruta;
 
-    return `http://localhost:5000${ruta}`;
+    return `https://prograweb2-zaiw.onrender.com${ruta}`;
   };
 
   const guardarNuevaPelicula = async () => {
