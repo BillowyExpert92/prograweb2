@@ -13,13 +13,13 @@ function DetallePublicacion() {
   const getImageUrl = (ruta, fallback = "/User.jpg") => {
     if (!ruta) return fallback;
     if (ruta.startsWith("http")) return ruta;
-    if (ruta.startsWith("/uploads")) return `http://localhost:5000${ruta}`;
-    if (ruta.startsWith("uploads")) return `http://localhost:5000/${ruta}`;
+    if (ruta.startsWith("/uploads")) return `https://prograweb2-zaiw.onrender.com${ruta}`;
+    if (ruta.startsWith("uploads")) return `https://prograweb2-zaiw.onrender.com/${ruta}`;
     return `/${ruta}`;
   };
 
   const cargarPublicacion = async () => {
-    const res = await fetch(`http://localhost:5000/api/publicaciones/${id}`);
+    const res = await fetch(`https://prograweb2-zaiw.onrender.com/api/publicaciones/${id}`);
     const data = await res.json();
     setPublicacion(data);
   };
@@ -35,7 +35,7 @@ function DetallePublicacion() {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/publicaciones/${id}/valorar`,
+      `https://prograweb2-zaiw.onrender.com/api/publicaciones/${id}/valorar`,
       {
         method: "POST",
         headers: {
@@ -68,7 +68,7 @@ function DetallePublicacion() {
     }
 
     const res = await fetch(
-      `http://localhost:5000/api/publicaciones/${id}/comentar`,
+      `https://prograweb2-zaiw.onrender.com/api/publicaciones/${id}/comentar`,
       {
         method: "POST",
         headers: {
