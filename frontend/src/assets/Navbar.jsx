@@ -28,7 +28,7 @@ function Navbar() {
       <nav className="navbar">
         <div className="container">
           <Link to="/" className="logo">
-            <img src="../public/icono.png" alt="Logo" className="logo-icon" />
+            <img src="../../public/icono.png" alt="Logo" className="logo-icon" />
           </Link>
 
           <div className="search-box">
